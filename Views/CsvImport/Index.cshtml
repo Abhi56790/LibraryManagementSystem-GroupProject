@@ -1,0 +1,100 @@
+﻿@model LibraryManagementSystem.Models.CsvItemImportViewModel
+
+@{
+    ViewData["Title"] = "CSV Item Import";
+}
+
+<div class="container py-4">
+
+    <h2>CSV Item Import</h2>
+
+    <p class="text-muted">
+        Upload a CSV file to add multiple library items at once.
+    </p>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            <form asp-action="Upload"
+                  method="post"
+                  enctype="multipart/form-data">
+
+                <div asp-validation-summary="ModelOnly"
+                     class="text-danger"></div>
+
+                <div class="mb-3">
+                    <label asp-for="CsvFile"
+                           class="form-label"></label>
+
+                    <input asp-for="CsvFile"
+                           type="file"
+                           accept=".csv"
+                           class="form-control" />
+
+                    <span asp-validation-for="CsvFile"
+                          class="text-danger"></span>
+                </div>
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    Upload CSV
+                </button>
+
+                <a asp-controller="Admin"
+                   asp-action="Index"
+                   class="btn btn-secondary">
+                    Back to Admin
+                </a>
+
+            </form>
+
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-body">
+
+            <h5>Required CSV Format</h5>
+
+            <p>
+                The first row must contain these column headings:
+            </p>
+
+            <code>
+                Type,Name,Description,LibraryCode,BranchCode,Author,Genre,Artist,Year,ToyType,MinimumAge
+            </code>
+
+            <hr />
+
+            <p class="mb-1"><strong>Supported item types:</strong></p>
+
+            <ul>
+                <li>Book</li>
+                <li>Music</li>
+                <li>Toy</li>
+            </ul>
+
+        </div>
+    </div>
+
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

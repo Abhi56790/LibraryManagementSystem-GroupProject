@@ -1,0 +1,228 @@
+﻿@model IEnumerable<LibraryManagementSystem.Models.Loan>
+
+@{
+    ViewData["Title"] = "Manager Reports";
+}
+
+<div class="container py-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>Manager Reports</h2>
+            <p class="text-muted mb-0">
+                Borrowing, fine revenue and inventory health overview.
+            </p>
+        </div>
+    </div>
+
+    <!-- Summary Statistics -->
+    <div class="row mb-4">
+
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h6>Total Loans</h6>
+                    <h2>@ViewBag.TotalLoans</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h6>Active Loans</h6>
+                    <h2>@ViewBag.ActiveLoans</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h6>Overdue Loans</h6>
+                    <h2>@ViewBag.OverdueLoans</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3 mb-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body text-center">
+                    <h6>Fine Revenue</h6>
+                    <h2>@(((decimal)ViewBag.TotalFineRevenue).ToString("C"))</h2>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Inventory Health -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            <h4 class="mb-0">Inventory Health</h4>
+        </div>
+
+        <div class="card-body">
+
+            <div class="row text-center">
+
+                <div class="col">
+                    <strong>Total</strong>
+                    <div class="fs-4">@ViewBag.TotalItems</div>
+                </div>
+
+                <div class="col">
+                    <strong>Available</strong>
+                    <div class="fs-4">@ViewBag.AvailableItems</div>
+                </div>
+
+                <div class="col">
+                    <strong>Borrowed</strong>
+                    <div class="fs-4">@ViewBag.BorrowedItems</div>
+                </div>
+
+                <div class="col">
+                    <strong>Damaged</strong>
+                    <div class="fs-4">@ViewBag.DamagedItems</div>
+                </div>
+
+                <div class="col">
+                    <strong>Destroyed</strong>
+                    <div class="fs-4">@ViewBag.DestroyedItems</div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Branch Inventory -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-header">
+            <h4 class="mb-0">Branch Inventory</h4>
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Branch</th>
+                            <th>Branch Code</th>
+                            <th>Total Items</th>
+                            <th>Available</th>
+                            <th>Borrowed</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var branch in ViewBag.Branches)
+                        {
+                            <tr>
+                                <td>@branch.Name</td>
+                                <td>@branch.BranchCode</td>
+                                <td>@branch.TotalItems</td>
+                                <td>@branch.AvailableItems</td>
+                                <td>@branch.BorrowedItems</td>
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Loan and Fine Audit -->
+    <div class="card shadow-sm mb-4">
+
+        <div class="card-header">
+            <h4 class="mb-0">Loan & Fine Audit</h4>
+        </div>
+
+        <div class="card-body">
+
+            <div class="table-responsive">
+
+                <table class="table table-bordered table-striped align-middle">
+
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Item</th>
+                            <th>Library Code</th>
+                            <th>Borrower</th>
+                            <th>Branch</th>
+                            <th>Borrowed</th>
+                            <th>Due</th>
+                            <th>Returned</th>
+                            <th>Fine</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        @foreach (var loan in Model)
+                        {
+                            <tr>
+                                <td>@loan.Item.Name</td>
+
+                                <td>@loan.Item.LibraryCode</td>
+
+                                <td>@loan.Borrower.FullName</td>
+
+                                <td>
+                                    @(loan.Item.LibraryBranch?.Name ?? "Not Assigned")
+                                </td>
+
+                                <td>
+                                    @loan.BorrowDate.ToString("dd/MM/yyyy")
+                                </td>
+
+                                <td>
+                                    @loan.DueDate.ToString("dd/MM/yyyy")
+                                </td>
+
+                                <td>
+                                    @(loan.ReturnDate.HasValue
+                                        ? loan.ReturnDate.Value.ToString("dd/MM/yyyy")
+                                        : "Active")
+                                </td>
+
+                                <td>
+                                    @loan.FineAmount.ToString("C")
+                                </td>
+                            </tr>
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+
+    <div class="mb-4">
+        <a asp-action="ExportLoansCsv"
+           class="btn btn-success">
+            Export Loan Report to CSV
+        </a>
+    </div>
+
+    <a asp-action="ExportReportPdf"
+       class="btn btn-danger">
+        Export / Save as PDF
+    </a>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Back to Manager Dashboard
+    </a>
+
+</div>
