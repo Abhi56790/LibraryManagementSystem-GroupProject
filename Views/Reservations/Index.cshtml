@@ -1,0 +1,132 @@
+﻿@model IEnumerable<LibraryManagementSystem.Models.Reservation>
+
+@{
+    ViewData["Title"] = "Reservation Queue";
+}
+
+<h2 class="mb-4">Reservation Queue</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">
+        Add Reservation
+    </a>
+</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No reservations have been created yet.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Item</th>
+                    <th>Library Code</th>
+                    <th>Borrower</th>
+                    <th>Reserved Date</th>
+                    <th>Queue Position</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var reservation in Model)
+                {
+                    var waitingForItem = Model
+                        .Where(r => r.ItemId == reservation.ItemId &&
+                                    r.Status == "Waiting")
+                        .OrderBy(r => r.ReservedDate)
+                        .ToList();
+
+                    var position = waitingForItem
+                        .FindIndex(r => r.Id == reservation.Id) + 1;
+
+                    <tr>
+                        <td>@reservation.Item.Name</td>
+
+                        <td>@reservation.Item.LibraryCode</td>
+
+                        <td>@reservation.Borrower.FullName</td>
+
+                        <td>
+                            @reservation.ReservedDate.ToString("dd/MM/yyyy HH:mm")
+                        </td>
+
+                        <td>
+                            @if (reservation.Status == "Waiting")
+                            {
+                                <span>@position</span>
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            }
+                        </td>
+
+                        <td>
+                            @if (reservation.Status == "Waiting")
+                            {
+                                <span class="badge bg-warning text-dark">
+                                    Waiting
+                                </span>
+                            }
+                            else if (reservation.Status == "ReadyForCollection")
+                            {
+                                <span class="badge bg-success">
+                                    Ready for Collection
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">
+                                    @reservation.Status
+                                </span>
+                            }
+                        </td>
+
+                        <td>
+                            @if (reservation.Status == "Waiting")
+                            {
+                                <form asp-action="Cancel" method="post">
+                                    <input type="hidden"
+                                           name="id"
+                                           value="@reservation.Id" />
+
+                                    <button type="submit"
+                                            class="btn btn-danger btn-sm">
+                                        Cancel
+                                    </button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<a asp-controller="Reception"
+   asp-action="Index"
+   class="btn btn-secondary mt-3">
+    Back to Reception Dashboard
+</a>

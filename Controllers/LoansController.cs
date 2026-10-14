@@ -95,12 +95,62 @@ public class LoansController : Controller
         loan.ReturnDate = returnDate;
         loan.FineAmount = fine;
 
+        // Item becomes available after return.
         loan.Item.Status = ItemStatus.Available;
+
+        // Find the first person waiting for this item.
+        var nextReservation = await _context.Reservations
+            .Include(r => r.Borrower)
+            .Where(r =>
+                r.ItemId == loan.ItemId &&
+                r.Status == "Waiting")
+            .OrderBy(r => r.ReservedDate)
+            .FirstOrDefaultAsync();
+
+        if (nextReservation != null)
+        {
+            // First person in the queue is now ready to collect.
+            nextReservation.Status = "ReadyForCollection";
+
+            // Create a simulated notification.
+            var notification = new Notification
+            {
+                BorrowerId = nextReservation.BorrowerId,
+                ReservationId = nextReservation.Id,
+                Type = "Reservation Ready",
+                Channel = "Email",
+                Status = "Sent",
+                CreatedAt = DateTime.Now,
+                SentAt = DateTime.Now,
+                Message =
+                    $"The item '{loan.Item.Name}' is now available for collection."
+            };
+
+            _context.Notifications.Add(notification);
+        }
 
         await _context.SaveChangesAsync();
 
+        // Generate a fine notification when a late fine is charged.
         if (fine > 0)
         {
+            var fineNotification = new Notification
+            {
+                BorrowerId = loan.BorrowerId,
+                LoanId = loan.Id,
+                Type = "Fine",
+                Channel = "Email",
+                Status = "Sent",
+                CreatedAt = DateTime.Now,
+                SentAt = DateTime.Now,
+                Message =
+                    $"A late fine of {fine:C} was charged for " +
+                    $"'{loan.Item.Name}'."
+            };
+
+            _context.Notifications.Add(fineNotification);
+            await _context.SaveChangesAsync();
+
             TempData["SuccessMessage"] =
                 $"{loan.Item.Name} was returned successfully. Late fine: {fine:C}.";
         }
@@ -182,6 +232,26 @@ public class LoansController : Controller
         item.Status = ItemStatus.Borrowed;
 
         _context.Loans.Add(loan);
+
+        // Save first so the loan receives its database ID.
+        await _context.SaveChangesAsync();
+
+        // Create a simulated borrowing notification.
+        var notification = new Notification
+        {
+            BorrowerId = borrower.Id,
+            LoanId = loan.Id,
+            Type = "Item Borrowed",
+            Channel = "Email",
+            Status = "Sent",
+            CreatedAt = DateTime.Now,
+            SentAt = DateTime.Now,
+            Message =
+                $"'{item.Name}' has been borrowed successfully. " +
+                $"Due date: {loan.DueDate:dd/MM/yyyy}."
+        };
+
+        _context.Notifications.Add(notification);
 
         await _context.SaveChangesAsync();
 
