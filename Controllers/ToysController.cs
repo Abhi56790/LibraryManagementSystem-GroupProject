@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 [Authorize(Roles = "Admin")]
 
@@ -17,9 +18,13 @@ public class ToysController : Controller
     }
 
     // GET: TOYS
-    public async Task<IActionResult> Index()    
+    public async Task<IActionResult> Index()
     {
-        return View(await _context.Toys.ToListAsync());
+        var toys = await _context.Toys
+            .Include(t => t.LibraryBranch)
+            .ToListAsync();
+
+        return View(toys);
     }
 
     // GET: TOYS/Details/5
@@ -43,6 +48,10 @@ public class ToysController : Controller
     // GET: TOYS/Create
     public IActionResult Create()
     {
+        ViewData["LibraryBranchId"] = new SelectList(
+    _context.LibraryBranches.OrderBy(b => b.Name),
+    "Id",
+    "Name");
         return View();
     }
 
@@ -51,7 +60,7 @@ public class ToysController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Type,MinimumAge,Id,Name,Description,LibraryCode,Status,Loans")] Toy toy)
+    public async Task<IActionResult> Create([Bind("Type,MinimumAge,Id,Name,Description,LibraryCode,Status,Loans,LibraryBranchId")] Toy toy)
     {
         bool libraryCodeExists = await _context.Items
     .AnyAsync(i => i.LibraryCode == toy.LibraryCode);
@@ -68,6 +77,11 @@ public class ToysController : Controller
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        ViewData["LibraryBranchId"] = new SelectList(
+        _context.LibraryBranches.OrderBy(b => b.Name),
+        "Id",
+        "Name",
+        toy.LibraryBranchId);
         return View(toy);
     }
 
@@ -84,6 +98,11 @@ public class ToysController : Controller
         {
             return NotFound();
         }
+        ViewData["LibraryBranchId"] = new SelectList(
+    _context.LibraryBranches.OrderBy(b => b.Name),
+    "Id",
+    "Name",
+    toy.LibraryBranchId);
         return View(toy);
     }
 
@@ -92,7 +111,7 @@ public class ToysController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Type,MinimumAge,Id,Name,Description,LibraryCode,Status,Loans")] Toy toy)
+    public async Task<IActionResult> Edit(int? id, [Bind("Type,MinimumAge,Id,Name,Description,LibraryCode,Status,Loans,LibraryBranchId")] Toy toy)
     {
         if (id != toy.Id)
         {
@@ -127,6 +146,11 @@ public class ToysController : Controller
             }
             return RedirectToAction(nameof(Index));
         }
+        ViewData["LibraryBranchId"] = new SelectList(
+    _context.LibraryBranches.OrderBy(b => b.Name),
+    "Id",
+    "Name",
+    toy.LibraryBranchId);
         return View(toy);
     }
 

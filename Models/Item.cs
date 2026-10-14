@@ -20,5 +20,10 @@ public abstract class Item
 
     public ItemStatus Status { get; set; } = ItemStatus.Available;
 
+    [Display(Name = "Library Branch")]
+    public int? LibraryBranchId { get; set; }
+
+    public LibraryBranch? LibraryBranch { get; set; }
+
     public ICollection<Loan> Loans { get; set; } = new List<Loan>();
 }

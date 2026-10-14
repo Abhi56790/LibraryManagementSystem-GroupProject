@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Request Branch Transfer";
+}
+
+<h2 class="mb-4">Request Branch Transfer</h2>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<form asp-action="Create" method="post">
+
+    <div class="mb-3">
+        <label class="form-label">Item</label>
+
+        <select name="itemId"
+                asp-items="ViewBag.ItemId"
+                class="form-select"
+                required>
+            <option value="">-- Select Item --</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Destination Branch</label>
+
+        <select name="toBranchId"
+                asp-items="ViewBag.ToBranchId"
+                class="form-select"
+                required>
+            <option value="">-- Select Destination Branch --</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Request Transfer
+    </button>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Cancel
+    </a>
+
+</form>

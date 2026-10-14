@@ -56,6 +56,45 @@ namespace LibraryManagementSystem.Data.Migrations
                     b.ToTable("Borrowers");
                 });
 
+            modelBuilder.Entity("LibraryManagementSystem.Models.BranchTransfer", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime?>("CompletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("FromBranchId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ItemId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("RequestedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<int>("ToBranchId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FromBranchId");
+
+                    b.HasIndex("ItemId");
+
+                    b.HasIndex("ToBranchId");
+
+                    b.ToTable("BranchTransfers");
+                });
+
             modelBuilder.Entity("LibraryManagementSystem.Models.Item", b =>
                 {
                     b.Property<int>("Id")
@@ -74,6 +113,9 @@ namespace LibraryManagementSystem.Data.Migrations
                         .HasMaxLength(5)
                         .HasColumnType("nvarchar(5)");
 
+                    b.Property<int?>("LibraryBranchId")
+                        .HasColumnType("int");
+
                     b.Property<string>("LibraryCode")
                         .IsRequired()
                         .HasMaxLength(30)
@@ -89,6 +131,8 @@ namespace LibraryManagementSystem.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("LibraryBranchId");
+
                     b.HasIndex("LibraryCode")
                         .IsUnique();
 
@@ -97,6 +141,34 @@ namespace LibraryManagementSystem.Data.Migrations
                     b.HasDiscriminator<string>("Discriminator").HasValue("Item");
 
                     b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("LibraryManagementSystem.Models.LibraryBranch", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("BranchCode")
+                        .IsRequired()
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("LibraryBranches");
                 });
 
             modelBuilder.Entity("LibraryManagementSystem.Models.Loan", b =>
@@ -383,6 +455,42 @@ namespace LibraryManagementSystem.Data.Migrations
                     b.HasDiscriminator().HasValue("Toy");
                 });
 
+            modelBuilder.Entity("LibraryManagementSystem.Models.BranchTransfer", b =>
+                {
+                    b.HasOne("LibraryManagementSystem.Models.LibraryBranch", "FromBranch")
+                        .WithMany()
+                        .HasForeignKey("FromBranchId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("LibraryManagementSystem.Models.Item", "Item")
+                        .WithMany()
+                        .HasForeignKey("ItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("LibraryManagementSystem.Models.LibraryBranch", "ToBranch")
+                        .WithMany()
+                        .HasForeignKey("ToBranchId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("FromBranch");
+
+                    b.Navigation("Item");
+
+                    b.Navigation("ToBranch");
+                });
+
+            modelBuilder.Entity("LibraryManagementSystem.Models.Item", b =>
+                {
+                    b.HasOne("LibraryManagementSystem.Models.LibraryBranch", "LibraryBranch")
+                        .WithMany("Items")
+                        .HasForeignKey("LibraryBranchId");
+
+                    b.Navigation("LibraryBranch");
+                });
+
             modelBuilder.Entity("LibraryManagementSystem.Models.Loan", b =>
                 {
                     b.HasOne("LibraryManagementSystem.Models.Borrower", "Borrower")
@@ -461,6 +569,11 @@ namespace LibraryManagementSystem.Data.Migrations
             modelBuilder.Entity("LibraryManagementSystem.Models.Item", b =>
                 {
                     b.Navigation("Loans");
+                });
+
+            modelBuilder.Entity("LibraryManagementSystem.Models.LibraryBranch", b =>
+                {
+                    b.Navigation("Items");
                 });
 #pragma warning restore 612, 618
         }

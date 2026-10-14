@@ -15,6 +15,8 @@ public class ApplicationDbContext(
 
     public DbSet<Borrower> Borrowers { get; set; } = default!;
     public DbSet<Loan> Loans { get; set; } = default!;
+    public DbSet<LibraryBranch> LibraryBranches { get; set; } = default!;
+    public DbSet<BranchTransfer> BranchTransfers { get; set; } = default!;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -37,6 +39,18 @@ public class ApplicationDbContext(
             .HasOne(loan => loan.Borrower)
             .WithMany(borrower => borrower.Loans)
             .HasForeignKey(loan => loan.BorrowerId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<BranchTransfer>()
+    .HasOne(t => t.FromBranch)
+    .WithMany()
+    .HasForeignKey(t => t.FromBranchId)
+    .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<BranchTransfer>()
+            .HasOne(t => t.ToBranch)
+            .WithMany()
+            .HasForeignKey(t => t.ToBranchId)
             .OnDelete(DeleteBehavior.Restrict);
     }
 }

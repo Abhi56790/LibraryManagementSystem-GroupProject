@@ -19,7 +19,9 @@ public class CatalogueController : Controller
 
     public async Task<IActionResult> Index(string? searchString)
     {
-        var items = _context.Items.AsQueryable();
+        var items = _context.Items
+    .Include(i => i.LibraryBranch)
+    .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(searchString))
         {

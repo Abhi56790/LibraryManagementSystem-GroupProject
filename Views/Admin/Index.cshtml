@@ -12,6 +12,35 @@
     <div class="col-md-4 mb-3">
         <div class="card h-100">
             <div class="card-body text-center">
+                <h3>Library Branches</h3>
+                <p>Manage physical library branch locations.</p>
+
+                <a asp-controller="LibraryBranches"
+                   asp-action="Index"
+                   class="btn btn-primary">
+                    Manage Branches
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h3>Branch Transfers</h3>
+                <p>Move library items between physical branches.</p>
+
+                <a asp-controller="BranchTransfers"
+                   asp-action="Index"
+                   class="btn btn-primary">
+                    Manage Transfers
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
                 <h3>Books</h3>
                 <p>Add, edit, view and delete books.</p>
 

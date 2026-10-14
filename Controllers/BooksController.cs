@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 [Authorize(Roles = "Admin")]
 public class BooksController : Controller
@@ -16,9 +17,13 @@ public class BooksController : Controller
     }
 
     // GET: BOOKS
-    public async Task<IActionResult> Index()    
+    public async Task<IActionResult> Index()
     {
-        return View(await _context.Books.ToListAsync());
+        var books = await _context.Books
+            .Include(b => b.LibraryBranch)
+            .ToListAsync();
+
+        return View(books);
     }
 
     // GET: BOOKS/Details/5
@@ -42,6 +47,11 @@ public class BooksController : Controller
     // GET: BOOKS/Create
     public IActionResult Create()
     {
+        ViewData["LibraryBranchId"] = new SelectList(
+            _context.LibraryBranches.OrderBy(b => b.Name),
+            "Id",
+            "Name");
+
         return View();
     }
 
@@ -51,7 +61,7 @@ public class BooksController : Controller
     [HttpPost]
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create(
-    [Bind("Author,Genre,Id,Name,Description,LibraryCode,Status")] Book book)
+    [Bind("Author,Genre,Id,Name,Description,LibraryCode,Status,LibraryBranchID")] Book book)
     {
         bool libraryCodeExists = await _context.Items
             .AnyAsync(i => i.LibraryCode == book.LibraryCode);
@@ -69,6 +79,11 @@ public class BooksController : Controller
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        ViewData["LibraryBranchId"] = new SelectList(
+    _context.LibraryBranches.OrderBy(b => b.Name),
+    "Id",
+    "Name",
+    book.LibraryBranchId);
 
         return View(book);
     }
@@ -86,6 +101,11 @@ public class BooksController : Controller
         {
             return NotFound();
         }
+        ViewData["LibraryBranchId"] = new SelectList(
+    _context.LibraryBranches.OrderBy(b => b.Name),
+    "Id",
+    "Name",
+    book.LibraryBranchId);
         return View(book);
     }
 
@@ -94,7 +114,7 @@ public class BooksController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Author,Genre,Id,Name,Description,LibraryCode,Status,Loans")] Book book)
+    public async Task<IActionResult> Edit(int? id, [Bind("Author,Genre,Id,Name,Description,LibraryCode,Status,LibraryBranchId")] Book book)
     {
         if (id != book.Id)
         {
@@ -129,6 +149,11 @@ public class BooksController : Controller
             }
             return RedirectToAction(nameof(Index));
         }
+        ViewData["LibraryBranchId"] = new SelectList(
+    _context.LibraryBranches.OrderBy(b => b.Name),
+    "Id",
+    "Name",
+    book.LibraryBranchId);
         return View(book);
     }
 
