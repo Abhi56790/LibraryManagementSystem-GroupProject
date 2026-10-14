@@ -1,0 +1,155 @@
+﻿@model IEnumerable<LibraryManagementSystem.Models.Item>
+
+@{
+    ViewData["Title"] = "Library Catalogue";
+}
+
+<div class="text-center mb-4">
+    <h1>Library Catalogue</h1>
+    <p>Search books, music and toys available in the library.</p>
+</div>
+
+<div class="row justify-content-center mb-4">
+    <div class="col-md-8">
+
+        <form asp-controller="Catalogue"
+              asp-action="Index"
+              method="get">
+
+            <div class="input-group">
+
+                <input type="text"
+                       name="searchString"
+                       value="@ViewData["CurrentSearch"]"
+                       class="form-control"
+                       placeholder="Search title, code, author, artist, genre or type" />
+
+                <button type="submit"
+                        class="btn btn-primary">
+                    Search
+                </button>
+
+                <a asp-controller="Catalogue"
+                   asp-action="Index"
+                   class="btn btn-outline-secondary">
+                    Clear
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info text-center">
+        No library items were found.
+    </div>
+}
+else
+{
+    <div class="row">
+
+        @foreach (var item in Model)
+        {
+            <div class="col-sm-6 col-lg-4 mb-4">
+
+                <div class="card h-100 shadow-sm">
+
+                    <div class="card-body">
+
+                        <h4 class="card-title">
+                            @item.Name
+                        </h4>
+
+                        <p class="card-text">
+                            @item.Description
+                        </p>
+
+                        <p>
+                            <strong>Library Code:</strong>
+                            @item.LibraryCode
+                        </p>
+
+                        <p>
+                            <strong>Item Category:</strong>
+                            @item.GetType().Name
+                        </p>
+                        @if (item is Book book)
+                        {
+                            <p>
+                                <strong>Author:</strong>
+                                @book.Author
+                            </p>
+
+                            <p>
+                                <strong>Genre:</strong>
+                                @book.Genre
+                            </p>
+                        }
+                        else if (item is Music music)
+                        {
+                            <p>
+                                <strong>Artist:</strong>
+                                @music.Artist
+                            </p>
+
+                            <p>
+                                <strong>Year:</strong>
+                                @music.Year
+                            </p>
+                        }
+                        else if (item is Toy toy)
+                        {
+                            <p>
+                                <strong>Type:</strong>
+                                @toy.Type
+                            </p>
+
+                            <p>
+                                <strong>Minimum Age:</strong>
+                                @toy.MinimumAge
+                            </p>
+                        }
+
+                        <p>
+                            <strong>Status:</strong>
+
+                            @if (item.Status == ItemStatus.Available)
+                            {
+                                <span class="badge bg-success">
+                                    Available
+                                </span>
+                            }
+                            else if (item.Status == ItemStatus.Borrowed)
+                            {
+                                <span class="badge bg-warning text-dark">
+                                    Borrowed
+                                </span>
+                            }
+                            else if (item.Status == ItemStatus.Damaged)
+                            {
+                                <span class="badge bg-danger">
+                                    Damaged
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-dark">
+                                    Destroyed
+                                </span>
+                            }
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+        }
+
+    </div>
+}

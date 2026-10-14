@@ -1,0 +1,57 @@
+﻿@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="text-center mb-4">
+    <h1>Admin Dashboard</h1>
+    <p>Manage library items</p>
+</div>
+
+<div class="row">
+
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h3>Books</h3>
+                <p>Add, edit, view and delete books.</p>
+
+                <a asp-controller="Books"
+                   asp-action="Index"
+                   class="btn btn-primary">
+                    Manage Books
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h3>Music</h3>
+                <p>Add, edit, view and delete music.</p>
+
+                <a asp-controller="Music"
+                   asp-action="Index"
+                   class="btn btn-primary">
+                    Manage Music
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h3>Toys</h3>
+                <p>Add, edit, view and delete toys.</p>
+
+                <a asp-controller="Toys"
+                   asp-action="Index"
+                   class="btn btn-primary">
+                    Manage Toys
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>

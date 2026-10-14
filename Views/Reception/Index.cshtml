@@ -1,0 +1,62 @@
+﻿@{
+    ViewData["Title"] = "Reception Dashboard";
+}
+
+<div class="text-center mb-4">
+    <h1>Reception Dashboard</h1>
+    <p>Manage borrowers and library loans</p>
+</div>
+
+<div class="row">
+
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h3>Borrowers</h3>
+                <p>Add, edit, view and delete borrower details.</p>
+
+                <a asp-controller="Borrowers"
+                   asp-action="Index"
+                   class="btn btn-primary">
+                    Manage Borrowers
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h3>Borrow Item</h3>
+                <p>Lend an available item using its library code.</p>
+
+                <a asp-controller="Loans"
+                   asp-action="Borrow"
+                   class="btn btn-primary">
+                    Borrow Item
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h3>Return Item</h3>
+                <p>Return borrowed items and calculate late fines.</p>
+
+                <a asp-controller="Loans"
+                   asp-action="Index"
+                   class="btn btn-primary">
+                    View Active Loans
+                </a>
+                <a asp-controller="Loans"
+                   asp-action="History"
+                   class="btn btn-primary">
+                    View Loan History
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>

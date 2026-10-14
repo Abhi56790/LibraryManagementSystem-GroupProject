@@ -1,0 +1,76 @@
+﻿@model LibraryManagementSystem.Models.BorrowItemViewModel
+
+@{
+    ViewData["Title"] = "Borrow Item";
+}
+
+<h1>Borrow Item</h1>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+<p>Enter the item's library code and select the borrower.</p>
+
+<hr />
+
+<div class="row">
+    <div class="col-md-6">
+
+        <form asp-action="Borrow" method="post">
+
+            <div asp-validation-summary="ModelOnly"
+                 class="text-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="LibraryCode"
+                       class="form-label"></label>
+
+                <input asp-for="LibraryCode"
+                       class="form-control"
+                       placeholder="Example: BK001" />
+
+                <span asp-validation-for="LibraryCode"
+                      class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="BorrowerId"
+                       class="form-label"></label>
+
+                <select asp-for="BorrowerId"
+                        asp-items="Model.Borrowers"
+                        class="form-select">
+
+                    <option value="">-- Select Borrower --</option>
+
+                </select>
+
+                <span asp-validation-for="BorrowerId"
+                      class="text-danger"></span>
+            </div>
+
+            <button type="submit"
+                    class="btn btn-primary">
+                Borrow Item
+            </button>
+
+            <a asp-controller="Reception"
+               asp-action="Index"
+               class="btn btn-secondary">
+                Cancel
+            </a>
+
+        </form>
+
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

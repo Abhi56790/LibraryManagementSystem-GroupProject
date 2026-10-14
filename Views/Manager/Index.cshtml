@@ -1,0 +1,139 @@
+﻿@model LibraryManagementSystem.Models.ManagerDashboardViewModel
+
+@{
+    ViewData["Title"] = "Manager Dashboard";
+}
+
+<div class="mb-4">
+    <h1>Manager Dashboard</h1>
+    <p>Library statistics and performance overview</p>
+</div>
+
+
+<h3 class="mb-3">Borrowing Statistics</h3>
+
+<div class="row mb-4">
+
+    <div class="col-md-3 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5>Total Loans</h5>
+                <h2>@Model.TotalLoans</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5>Active Loans</h5>
+                <h2>@Model.ActiveLoans</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5>Returned Loans</h5>
+                <h2>@Model.ReturnedLoans</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5>Overdue Loans</h5>
+                <h2>@Model.OverdueLoans</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<h3 class="mb-3">Item Status Statistics</h3>
+
+<div class="row mb-4">
+
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5>Total Items</h5>
+                <h2>@Model.TotalItems</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5>Available</h5>
+                <h2>@Model.AvailableItems</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5>Borrowed</h5>
+                <h2>@Model.BorrowedItems</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5>Damaged</h5>
+                <h2>@Model.DamagedItems</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5>Destroyed</h5>
+                <h2>@Model.DestroyedItems</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<h3 class="mb-3">Fine Statistics</h3>
+
+<div class="row">
+
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5>Total Fines</h5>
+                <h2>@Model.TotalFines.ToString("C")</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5>Loans With Fines</h5>
+                <h2>@Model.LoansWithFines</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <h5>Average Fine</h5>
+                <h2>@Model.AverageFine.ToString("C")</h2>
+            </div>
+        </div>
+    </div>
+
+</div>

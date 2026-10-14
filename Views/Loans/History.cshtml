@@ -1,0 +1,53 @@
+﻿@model IEnumerable<LibraryManagementSystem.Models.Loan>
+
+@{
+    ViewData["Title"] = "Loan History";
+}
+
+<h2 class="mb-4">Loan History</h2>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No returned loans have been recorded yet.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Library Code</th>
+                    <th>Item</th>
+                    <th>Borrower</th>
+                    <th>Borrow Date</th>
+                    <th>Due Date</th>
+                    <th>Return Date</th>
+                    <th>Fine</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var loan in Model)
+                {
+                    <tr>
+                        <td>@loan.Item.LibraryCode</td>
+                        <td>@loan.Item.Name</td>
+                        <td>@loan.Borrower.FullName</td>
+                        <td>@loan.BorrowDate.ToString("dd/MM/yyyy")</td>
+                        <td>@loan.DueDate.ToString("dd/MM/yyyy")</td>
+                        <td>@loan.ReturnDate?.ToString("dd/MM/yyyy")</td>
+                        <td>@loan.FineAmount.ToString("C")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<a asp-controller="Reception"
+   asp-action="Index"
+   class="btn btn-secondary mt-3">
+    Back to Reception Dashboard
+</a>

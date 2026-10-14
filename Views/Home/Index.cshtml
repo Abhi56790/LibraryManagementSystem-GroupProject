@@ -1,0 +1,90 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="text-center py-5">
+    <h1 class="display-4 fw-bold">Library Management System</h1>
+
+    <p class="lead mt-3">
+        Manage books, music, toys, borrowers and library loans in one place.
+    </p>
+
+    <div class="mt-4">
+        <a asp-controller="Catalogue"
+           asp-action="Index"
+           class="btn btn-primary btn-lg">
+            Browse Catalogue
+        </a>
+    </div>
+</div>
+
+<div class="row g-4 mt-3">
+
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <h3>Library Items</h3>
+                <p>
+                    Search books, music and toys using the public catalogue.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <h3>Borrowing</h3>
+                <p>
+                    Manage borrowers, issue items, return items and calculate late fines.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body text-center">
+                <h3>Statistics</h3>
+                <p>
+                    View borrowing, item status and fine statistics.
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@if (User.Identity?.IsAuthenticated == true)
+{
+    <div class="text-center mt-5">
+
+        @if (User.IsInRole("Admin"))
+        {
+            <a asp-controller="Admin"
+               asp-action="Index"
+               class="btn btn-success">
+                Open Admin Dashboard
+            </a>
+        }
+
+        @if (User.IsInRole("Reception"))
+        {
+            <a asp-controller="Reception"
+               asp-action="Index"
+               class="btn btn-success">
+                Open Reception Dashboard
+            </a>
+        }
+
+        @if (User.IsInRole("Manager"))
+        {
+            <a asp-controller="Manager"
+               asp-action="Index"
+               class="btn btn-success">
+                Open Manager Dashboard
+            </a>
+        }
+
+    </div>
+}

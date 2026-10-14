@@ -1,0 +1,99 @@
+﻿@model IEnumerable<LibraryManagementSystem.Models.Loan>
+
+@{
+    ViewData["Title"] = "Active Loans";
+}
+
+<h1>Active Loans</h1>
+
+<p>Items currently borrowed from the library.</p>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        There are currently no active loans.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped">
+
+            <thead>
+                <tr>
+                    <th>Library Code</th>
+                    <th>Item</th>
+                    <th>Borrower</th>
+                    <th>Borrow Date</th>
+                    <th>Due Date</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                @foreach (var loan in Model)
+                {
+                    bool overdue = DateTime.Today > loan.DueDate.Date;
+
+                    <tr>
+                        <td>@loan.Item.LibraryCode</td>
+
+                        <td>@loan.Item.Name</td>
+
+                        <td>@loan.Borrower.FullName</td>
+
+                        <td>
+                            @loan.BorrowDate.ToString("dd/MM/yyyy")
+                        </td>
+
+                        <td>
+                            @loan.DueDate.ToString("dd/MM/yyyy")
+                        </td>
+
+                        <td>
+                            @if (overdue)
+                            {
+                                <span class="badge bg-danger">
+                                    Overdue
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-success">
+                                    On Time
+                                </span>
+                            }
+                        </td>
+
+                        <td>
+                            <form asp-action="Return"
+                                  method="post">
+
+                                <input type="hidden"
+                                       name="id"
+                                       value="@loan.Id" />
+
+                                <button type="submit"
+                                        class="btn btn-sm btn-primary">
+                                    Return Item
+                                </button>
+
+                            </form>
+                        </td>
+                    </tr>
+                }
+
+            </tbody>
+
+        </table>
+    </div>
+}
