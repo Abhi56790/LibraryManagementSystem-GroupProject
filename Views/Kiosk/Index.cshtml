@@ -4,42 +4,51 @@
 
 <div class="container py-5">
 
+    <!-- Kiosk heading -->
     <div class="text-center mb-5">
-        <h1 class="display-4 fw-bold">Library Self-Service</h1>
-        <p class="lead">
-            Enter or scan an item's library code to get started.
+        <h1 class="display-4 fw-bold">Library Self-Service Kiosk</h1>
+        <p class="lead text-muted">
+            Quickly find an item, check your account or borrow an available item.
         </p>
     </div>
 
     @if (TempData["ErrorMessage"] != null)
     {
-        <div class="alert alert-danger text-center fs-5">
+        <div class="alert alert-danger text-center fs-5 shadow-sm">
             @TempData["ErrorMessage"]
         </div>
     }
 
-    <div class="row justify-content-center">
-        <div class="col-lg-7">
+    <!-- Item search -->
+    <div class="row justify-content-center mb-5">
+        <div class="col-lg-8">
 
-            <div class="card shadow">
+            <div class="card shadow-sm">
                 <div class="card-body p-5">
+
+                    <div class="text-center mb-4">
+                        <h2 class="fw-bold">Find an Item</h2>
+                        <p class="text-muted">
+                            Scan or enter the library code shown on the item.
+                        </p>
+                    </div>
 
                     <form asp-action="Search" method="post">
 
-                        <label class="form-label fs-4 fw-bold">
+                        <label class="form-label fs-5 fw-semibold">
                             Library Code
                         </label>
 
                         <input type="text"
                                name="libraryCode"
-                               class="form-control form-control-lg mb-4"
-                               placeholder="Scan or enter library code"
+                               class="form-control kiosk-input mb-4"
+                               placeholder="Example: BK-DAR-001"
                                autocomplete="off"
                                autofocus
                                required />
 
                         <button type="submit"
-                                class="btn btn-primary btn-lg w-100 py-3 fs-4">
+                                class="btn btn-primary kiosk-button w-100">
                             Find Item
                         </button>
 
@@ -51,26 +60,58 @@
         </div>
     </div>
 
-    <div class="text-center mt-4">
-        <p class="fs-5">Want to check your current loans?</p>
+    <!-- Main kiosk options -->
+    <div class="row justify-content-center g-4">
 
-        <a asp-action="Account"
-           class="btn btn-success btn-lg px-5 py-3">
-            My Account
-        </a>
+        <div class="col-md-5">
+            <div class="card shadow-sm h-100 text-center">
+                <div class="card-body p-4">
+
+                    <div class="display-5 mb-3">👤</div>
+
+                    <h3>My Account</h3>
+
+                    <p class="text-muted">
+                        View your current loans, due dates and recorded fines.
+                    </p>
+
+                    <a asp-action="Account"
+                       class="btn btn-success kiosk-button w-100">
+                        View My Account
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-5">
+            <div class="card shadow-sm h-100 text-center">
+                <div class="card-body p-4">
+
+                    <div class="display-5 mb-3">📚</div>
+
+                    <h3>Check Out</h3>
+
+                    <p class="text-muted">
+                        Borrow an available library item using the self-service kiosk.
+                    </p>
+
+                    <a asp-action="Checkout"
+                       class="btn btn-primary kiosk-button w-100">
+                        Check Out Item
+                    </a>
+
+                </div>
+            </div>
+        </div>
+
     </div>
 
-    <div class="text-center mt-4">
-        <a asp-action="Checkout"
-           class="btn btn-success btn-lg px-5 py-3">
-            Check Out Item
-        </a>
-    </div>
-
+    <!-- Exit -->
     <div class="text-center mt-5">
         <a asp-controller="Home"
            asp-action="Index"
-           class="btn btn-outline-secondary btn-lg">
+           class="btn btn-outline-secondary btn-lg px-5">
             Exit Kiosk
         </a>
     </div>
