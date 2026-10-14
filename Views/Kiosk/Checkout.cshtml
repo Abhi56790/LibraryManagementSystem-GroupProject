@@ -1,0 +1,81 @@
+﻿@{
+    ViewData["Title"] = "Self-Service Checkout";
+}
+
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold">Self-Service Checkout</h1>
+
+        <p class="lead">
+            Identify your account and scan or enter the item's library code.
+        </p>
+    </div>
+
+    @if (TempData["CheckoutSuccess"] != null)
+    {
+        <div class="alert alert-success text-center fs-5">
+            @TempData["CheckoutSuccess"]
+        </div>
+    }
+
+    @if (TempData["CheckoutError"] != null)
+    {
+        <div class="alert alert-danger text-center fs-5">
+            @TempData["CheckoutError"]
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+
+            <div class="card shadow">
+                <div class="card-body p-5">
+
+                    <form asp-action="Checkout" method="post">
+
+                        <div class="mb-4">
+                            <label class="form-label fs-4 fw-bold">
+                                Registered Email
+                            </label>
+
+                            <input type="email"
+                                   name="email"
+                                   class="form-control form-control-lg"
+                                   placeholder="Enter your email address"
+                                   required />
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fs-4 fw-bold">
+                                Library Code
+                            </label>
+
+                            <input type="text"
+                                   name="libraryCode"
+                                   class="form-control form-control-lg"
+                                   placeholder="Scan or enter item code"
+                                   autocomplete="off"
+                                   required />
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-success btn-lg w-100 py-3 fs-4">
+                            Check Out Item
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
+
+            <div class="d-grid mt-4">
+                <a asp-action="Index"
+                   class="btn btn-outline-secondary btn-lg">
+                    Back to Kiosk
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>

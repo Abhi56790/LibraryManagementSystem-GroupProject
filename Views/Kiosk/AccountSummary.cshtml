@@ -1,0 +1,133 @@
+﻿@model LibraryManagementSystem.Models.Borrower
+
+@{
+    ViewData["Title"] = "Account Summary";
+
+    var activeLoans = Model.Loans
+        .Where(l => l.ReturnDate == null)
+        .OrderBy(l => l.DueDate)
+        .ToList();
+
+    var totalFines = Model.Loans.Sum(l => l.FineAmount);
+}
+
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold">Account Summary</h1>
+        <p class="lead">Welcome, @Model.FullName</p>
+    </div>
+
+    <div class="row justify-content-center mb-4">
+        <div class="col-lg-9">
+
+            <div class="card shadow">
+                <div class="card-body p-4">
+
+                    <div class="row text-center">
+
+                        <div class="col-md-6 mb-3">
+                            <h5>Items Currently Borrowed</h5>
+                            <div class="display-6 fw-bold">
+                                @activeLoans.Count
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <h5>Recorded Fines</h5>
+                            <div class="display-6 fw-bold">
+                                @totalFines.ToString("C")
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+
+            <h3 class="mb-3">Current Loans</h3>
+
+            @if (!activeLoans.Any())
+            {
+                <div class="alert alert-info fs-5">
+                    You currently have no borrowed items.
+                </div>
+            }
+            else
+            {
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Item</th>
+                                <th>Library Code</th>
+                                <th>Borrowed</th>
+                                <th>Due Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            @foreach (var loan in activeLoans)
+                            {
+                                var overdue = loan.DueDate.Date < DateTime.Today;
+
+                                <tr>
+                                    <td>@loan.Item.Name</td>
+
+                                    <td>@loan.Item.LibraryCode</td>
+
+                                    <td>
+                                        @loan.BorrowDate.ToString("dd/MM/yyyy")
+                                    </td>
+
+                                    <td>
+                                        @loan.DueDate.ToString("dd/MM/yyyy")
+                                    </td>
+
+                                    <td>
+                                        @if (overdue)
+                                        {
+                                            <span class="badge bg-danger">
+                                                Overdue
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <span class="badge bg-success">
+                                                On Loan
+                                            </span>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            }
+
+            <div class="d-grid gap-3 mt-4">
+
+                <a asp-action="Index"
+                   class="btn btn-primary btn-lg py-3">
+                    Return to Kiosk
+                </a>
+
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="btn btn-outline-secondary btn-lg">
+                    Exit Kiosk
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
