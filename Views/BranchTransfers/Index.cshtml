@@ -1,0 +1,113 @@
+﻿@model IEnumerable<LibraryManagementSystem.Models.BranchTransfer>
+
+@{
+    ViewData["Title"] = "Branch Transfers";
+}
+
+<h2 class="mb-4">Branch Transfers</h2>
+
+@if (TempData["SuccessMessage"] != null)
+{
+    <div class="alert alert-success">
+        @TempData["SuccessMessage"]
+    </div>
+}
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">
+        Request New Transfer
+    </a>
+</p>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        No branch transfers have been created yet.
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th>Item</th>
+                    <th>Library Code</th>
+                    <th>From Branch</th>
+                    <th>To Branch</th>
+                    <th>Requested</th>
+                    <th>Completed</th>
+                    <th>Status</th>
+                    <th></th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @foreach (var transfer in Model)
+                {
+                    <tr>
+                        <td>@transfer.Item.Name</td>
+                        <td>@transfer.Item.LibraryCode</td>
+                        <td>@transfer.FromBranch.Name</td>
+                        <td>@transfer.ToBranch.Name</td>
+                        <td>@transfer.RequestedDate.ToString("dd/MM/yyyy HH:mm")</td>
+
+                        <td>
+                            @if (transfer.CompletedDate != null)
+                            {
+                                @transfer.CompletedDate.Value.ToString("dd/MM/yyyy HH:mm")
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            }
+                        </td>
+
+                        <td>
+                            @if (transfer.Status == "Completed")
+                            {
+                                <span class="badge bg-success">Completed</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">
+                                    @transfer.Status
+                                </span>
+                            }
+                        </td>
+
+                        <td>
+                            @if (transfer.Status == "Requested")
+                            {
+                                <form asp-action="Complete"
+                                      method="post">
+                                    <input type="hidden"
+                                           name="id"
+                                           value="@transfer.Id" />
+
+                                    <button type="submit"
+                                            class="btn btn-success btn-sm">
+                                        Complete Transfer
+                                    </button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<a asp-controller="Admin"
+   asp-action="Index"
+   class="btn btn-secondary mt-3">
+    Back to Admin Dashboard
+</a>

@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using LibraryManagementSystem.Models;
 using LibraryManagementSystem.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 [Authorize(Roles = "Admin")]
 
@@ -17,9 +18,14 @@ public class MusicController : Controller
     }
 
     // GET: MUSICS
-    public async Task<IActionResult> Index()    
+
+    public async Task<IActionResult> Index()
     {
-        return View(await _context.Music.ToListAsync());
+        var music = await _context.Music
+            .Include(m => m.LibraryBranch)
+            .ToListAsync();
+
+        return View(music);
     }
 
     // GET: MUSICS/Details/5
@@ -43,6 +49,10 @@ public class MusicController : Controller
     // GET: MUSICS/Create
     public IActionResult Create()
     {
+        ViewData["LibraryBranchId"] = new SelectList(
+    _context.LibraryBranches.OrderBy(b => b.Name),
+    "Id",
+    "Name");
         return View();
     }
 
@@ -51,7 +61,7 @@ public class MusicController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("Artist,Year,Id,Name,Description,LibraryCode,Status,Loans")] Music music)
+    public async Task<IActionResult> Create([Bind("Artist,Year,Id,Name,Description,LibraryCode,Status,Loans,LibraryBranchId")] Music music)
     {
         bool libraryCodeExists = await _context.Items
                 .AnyAsync(i => i.LibraryCode == music.LibraryCode);
@@ -68,6 +78,11 @@ public class MusicController : Controller
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
+        ViewData["LibraryBranchId"] = new SelectList(
+    _context.LibraryBranches.OrderBy(b => b.Name),
+    "Id",
+    "Name",
+    music.LibraryBranchId);
         return View(music);
     }
 
@@ -84,6 +99,11 @@ public class MusicController : Controller
         {
             return NotFound();
         }
+        ViewData["LibraryBranchId"] = new SelectList(
+    _context.LibraryBranches.OrderBy(b => b.Name),
+    "Id",
+    "Name",
+    music.LibraryBranchId);
         return View(music);
     }
 
@@ -92,7 +112,7 @@ public class MusicController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int? id, [Bind("Artist,Year,Id,Name,Description,LibraryCode,Status,Loans")] Music music)
+    public async Task<IActionResult> Edit(int? id, [Bind("Artist,Year,Id,Name,Description,LibraryCode,Status,Loans,LibraryBranchId")] Music music)
     {
         if (id != music.Id)
         {
@@ -127,6 +147,11 @@ public class MusicController : Controller
             }
             return RedirectToAction(nameof(Index));
         }
+        ViewData["LibraryBranchId"] = new SelectList(
+    _context.LibraryBranches.OrderBy(b => b.Name),
+    "Id",
+    "Name",
+    music.LibraryBranchId);
         return View(music);
     }
 

@@ -27,6 +27,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.LibraryCode)
             </th>
+            <th>Branch</th>
             <th>
                 @Html.DisplayNameFor(model => model.Status)
             </th>
@@ -54,6 +55,9 @@
             <td>
                 @Html.DisplayFor(model => item.LibraryCode)
             </td>
+                <td>
+                    @(item.LibraryBranch?.Name ?? "Not Assigned")
+                </td>
             <td>
                 @Html.DisplayFor(model => item.Status)
             </td>
