@@ -1,0 +1,121 @@
+﻿@model IEnumerable<LibraryManagementSystem.Models.Loan>
+
+@{
+    ViewData["Title"] = "Library Management Report";
+}
+
+<style>
+    @@media print {
+        .no-print {
+            display: none !important;
+        }
+
+        body {
+            font-size: 12px;
+        }
+
+        .report-container {
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="container py-4 report-container">
+
+    <div class="text-center mb-4">
+        <h2>Library Management Report</h2>
+
+        <p>
+            Generated:
+            @ViewBag.GeneratedDate.ToString("dd/MM/yyyy HH:mm")
+        </p>
+    </div>
+
+    <div class="row text-center mb-4">
+
+        <div class="col">
+            <strong>Total Loans</strong>
+            <div>@ViewBag.TotalLoans</div>
+        </div>
+
+        <div class="col">
+            <strong>Active Loans</strong>
+            <div>@ViewBag.ActiveLoans</div>
+        </div>
+
+        <div class="col">
+            <strong>Total Fines</strong>
+            <div>
+                @(((decimal)ViewBag.TotalFines).ToString("C"))
+            </div>
+        </div>
+
+    </div>
+
+    <h4>Loan & Fine Audit</h4>
+
+    <table class="table table-bordered table-sm">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Code</th>
+                <th>Borrower</th>
+                <th>Branch</th>
+                <th>Borrowed</th>
+                <th>Due</th>
+                <th>Returned</th>
+                <th>Fine</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var loan in Model)
+            {
+                <tr>
+                    <td>@loan.Item.Name</td>
+
+                    <td>@loan.Item.LibraryCode</td>
+
+                    <td>@loan.Borrower.FullName</td>
+
+                    <td>
+                        @(loan.Item.LibraryBranch?.Name ?? "Not Assigned")
+                    </td>
+
+                    <td>
+                        @loan.BorrowDate.ToString("dd/MM/yyyy")
+                    </td>
+
+                    <td>
+                        @loan.DueDate.ToString("dd/MM/yyyy")
+                    </td>
+
+                    <td>
+                        @(loan.ReturnDate.HasValue
+                            ? loan.ReturnDate.Value.ToString("dd/MM/yyyy")
+                            : "Active")
+                    </td>
+
+                    <td>
+                        @loan.FineAmount.ToString("C")
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <div class="no-print mt-4">
+
+        <button onclick="window.print()"
+                class="btn btn-danger">
+            Print / Save as PDF
+        </button>
+
+        <a asp-action="Reports"
+           class="btn btn-secondary">
+            Back to Reports
+        </a>
+
+    </div>
+
+</div>
