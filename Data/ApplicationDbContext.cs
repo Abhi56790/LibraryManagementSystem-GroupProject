@@ -17,6 +17,8 @@ public class ApplicationDbContext(
     public DbSet<Loan> Loans { get; set; } = default!;
     public DbSet<LibraryBranch> LibraryBranches { get; set; } = default!;
     public DbSet<BranchTransfer> BranchTransfers { get; set; } = default!;
+    public DbSet<Reservation> Reservations { get; set; } = default!;
+    public DbSet<Notification> Notifications { get; set; } = default!;
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -52,5 +54,35 @@ public class ApplicationDbContext(
             .WithMany()
             .HasForeignKey(t => t.ToBranchId)
             .OnDelete(DeleteBehavior.Restrict);
+        builder.Entity<Reservation>()
+    .HasOne(r => r.Item)
+    .WithMany()
+    .HasForeignKey(r => r.ItemId)
+    .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Reservation>()
+            .HasOne(r => r.Borrower)
+            .WithMany()
+            .HasForeignKey(r => r.BorrowerId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Notification>()
+            .HasOne(n => n.Borrower)
+            .WithMany()
+            .HasForeignKey(n => n.BorrowerId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Notification>()
+            .HasOne(n => n.Loan)
+            .WithMany()
+            .HasForeignKey(n => n.LoanId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Notification>()
+            .HasOne(n => n.Reservation)
+            .WithMany()
+            .HasForeignKey(n => n.ReservationId)
+            .OnDelete(DeleteBehavior.Restrict);
+
     }
 }

@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Add Reservation";
+}
+
+<h2 class="mb-4">Add Reservation</h2>
+
+@if (TempData["ErrorMessage"] != null)
+{
+    <div class="alert alert-danger">
+        @TempData["ErrorMessage"]
+    </div>
+}
+
+<form asp-action="Create" method="post">
+
+    <div class="mb-3">
+        <label class="form-label">Unavailable Item</label>
+
+        <select name="itemId"
+                asp-items="ViewBag.ItemId"
+                class="form-select"
+                required>
+            <option value="">-- Select Item --</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Borrower</label>
+
+        <select name="borrowerId"
+                asp-items="ViewBag.BorrowerId"
+                class="form-select"
+                required>
+            <option value="">-- Select Borrower --</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+        Add to Waitlist
+    </button>
+
+    <a asp-action="Index"
+       class="btn btn-secondary">
+        Cancel
+    </a>
+
+</form>
