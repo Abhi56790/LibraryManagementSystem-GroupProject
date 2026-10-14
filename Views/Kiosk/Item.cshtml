@@ -1,0 +1,73 @@
+﻿@model LibraryManagementSystem.Models.Item
+
+@{
+    ViewData["Title"] = "Kiosk Item";
+}
+
+<div class="container py-5">
+
+    <div class="text-center mb-4">
+        <h1 class="display-5 fw-bold">@Model.Name</h1>
+        <p class="lead">Library item details</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+
+            <div class="card shadow">
+                <div class="card-body p-5 fs-5">
+
+                    <p>
+                        <strong>Library Code:</strong>
+                        @Model.LibraryCode
+                    </p>
+
+                    <p>
+                        <strong>Description:</strong>
+                        @Model.Description
+                    </p>
+
+                    <p>
+                        <strong>Status:</strong>
+
+                        @if (Model.Status == LibraryManagementSystem.Models.ItemStatus.Available)
+                        {
+                            <span class="badge bg-success fs-6">
+                                Available
+                            </span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-warning text-dark fs-6">
+                                @Model.Status
+                            </span>
+                        }
+                    </p>
+
+                    <p>
+                        <strong>Branch:</strong>
+                        @(Model.LibraryBranch?.Name ?? "Not Assigned")
+                    </p>
+
+                </div>
+            </div>
+
+            <div class="d-grid gap-3 mt-4">
+
+                <a asp-action="Index"
+                   class="btn btn-primary btn-lg py-3">
+                    Scan Another Item
+                </a>
+
+                <a asp-controller="Home"
+                   asp-action="Index"
+                   class="btn btn-outline-secondary btn-lg">
+                    Exit Kiosk
+                </a>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>

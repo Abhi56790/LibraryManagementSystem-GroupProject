@@ -1,0 +1,78 @@
+﻿@{
+    ViewData["Title"] = "Self-Service Kiosk";
+}
+
+<div class="container py-5">
+
+    <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold">Library Self-Service</h1>
+        <p class="lead">
+            Enter or scan an item's library code to get started.
+        </p>
+    </div>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger text-center fs-5">
+            @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+
+            <div class="card shadow">
+                <div class="card-body p-5">
+
+                    <form asp-action="Search" method="post">
+
+                        <label class="form-label fs-4 fw-bold">
+                            Library Code
+                        </label>
+
+                        <input type="text"
+                               name="libraryCode"
+                               class="form-control form-control-lg mb-4"
+                               placeholder="Scan or enter library code"
+                               autocomplete="off"
+                               autofocus
+                               required />
+
+                        <button type="submit"
+                                class="btn btn-primary btn-lg w-100 py-3 fs-4">
+                            Find Item
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="text-center mt-4">
+        <p class="fs-5">Want to check your current loans?</p>
+
+        <a asp-action="Account"
+           class="btn btn-success btn-lg px-5 py-3">
+            My Account
+        </a>
+    </div>
+
+    <div class="text-center mt-4">
+        <a asp-action="Checkout"
+           class="btn btn-success btn-lg px-5 py-3">
+            Check Out Item
+        </a>
+    </div>
+
+    <div class="text-center mt-5">
+        <a asp-controller="Home"
+           asp-action="Index"
+           class="btn btn-outline-secondary btn-lg">
+            Exit Kiosk
+        </a>
+    </div>
+
+</div>
